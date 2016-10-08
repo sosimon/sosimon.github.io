@@ -13,10 +13,10 @@
 <title>
 
 
-     Blog 
+     TIL: ternary in bash 
 
 </title>
-<link rel="canonical" href="https://sosimon.github.io/blog/">
+<link rel="canonical" href="https://sosimon.github.io/blog/til-ternary-in-bash/">
 
 
 <script type="text/javascript">
@@ -52,8 +52,6 @@
 >
 
 
-
-  <link href="https://sosimon.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Simon So" />
 
 
 
@@ -127,28 +125,55 @@
         </div>
     </div>
 </section>
-<section class="main">
+
+<section class="main post non-narrow zero-top-spacing">
     <div class="container">
         <div class="content">
-            <div class="page-heading">Blog</div>
-            <ul>
-                
-                <li class="post-item">
-    <div class="meta">Oct 8, 2016</div>
-    <a href="https://sosimon.github.io/blog/til-ternary-in-bash/"><div>TIL: ternary in bash</div></a>
-</li>
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
 
-                
-                <li class="post-item">
-    <div class="meta">Oct 7, 2016</div>
-    <a href="https://sosimon.github.io/blog/first/"><div>First!</div></a>
-</li>
+    TIL: ternary in bash
 
+</div>
+
+                    <div class="initials"><a href="https://sosimon.github.io/">ss</a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Sat Oct 8 2016 10:10:38 PST">Oct 8, 2016</div>
+                    <div class="reading-time"><div class="middot"></div>1 minute read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>I have been working with shell scripts for 4-5 years now, and I only recently saw, for the first time, someone shortcut the classic if/else/then statements:</p>
+
+<pre><code class="language-bash">[ $condition == &quot;true&quot; ] &amp;&amp; echo &quot;true&quot; || echo &quot;false&quot;
+</code></pre>
+
+<p>It took me a few minutes of staring at it to make sure it works the way I think it works.</p>
+
+<p>Having seen this though, I am of the opinion that it&rsquo;s probably better to be a bit more verbose:</p>
+
+<pre><code class="language-bash">if [ $condition == &quot;true&quot; ]; then
+  echo &quot;true&quot;
+else
+  echo &quot;false&quot;
+fi
+</code></pre>
+
+<p>I think it&rsquo;s more natural, easier to read and understand, better for the next guy/gal who needs to read and decipher your script.</p>
+
+                <br>
+                <p><a href="https://sosimon.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
                 
-            </ul>
+            </div>
         </div>
     </div>
 </section>
+
 
 
 
@@ -163,5 +188,4 @@
 
 </body>
 </html>
-
 
