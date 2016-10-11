@@ -13,10 +13,10 @@
 <title>
 
 
-     Blog 
+     Go: static file server 
 
 </title>
-<link rel="canonical" href="https://sosimon.github.io/blog/">
+<link rel="canonical" href="https://sosimon.github.io/blog/go-static-file-server/">
 
 
 <script type="text/javascript">
@@ -52,8 +52,6 @@
 >
 
 
-
-  <link href="https://sosimon.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Simon So" />
 
 
 
@@ -129,34 +127,58 @@
         </div>
     </div>
 </section>
-<section class="main">
+
+<section class="main post non-narrow zero-top-spacing">
     <div class="container">
         <div class="content">
-            <div class="page-heading">Blog</div>
-            <ul>
-                
-                <li class="post-item">
-    <div class="meta">Oct 10, 2016</div>
-    <a href="https://sosimon.github.io/blog/go-static-file-server/"><div>Go: static file server</div></a>
-</li>
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
 
-                
-                <li class="post-item">
-    <div class="meta">Oct 8, 2016</div>
-    <a href="https://sosimon.github.io/blog/til-ternary-in-bash/"><div>TIL: ternary in bash</div></a>
-</li>
+    Go: static file server
 
-                
-                <li class="post-item">
-    <div class="meta">Oct 7, 2016</div>
-    <a href="https://sosimon.github.io/blog/first/"><div>First!</div></a>
-</li>
+</div>
 
+                    <div class="initials"><a href="https://sosimon.github.io/">ss</a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Mon Oct 10 2016 21:02:33 PST">Oct 10, 2016</div>
+                    <div class="reading-time"><div class="middot"></div>1 minute read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>I started learning Go about 3 months ago, back in July. One of the things that struck me was how easy, accessible, and fun it was, especially when it came to doing things on the web.</p>
+
+<p>At work last week, there was a situation where an emergency firewall and router replacement would have interrupted communication to a static file server that we depedended on for CI. The solution was this:</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #f92672">package</span> <span style="color: #a6e22e">main</span>
+
+<span style="color: #f92672">import</span> <span style="color: #e6db74">&quot;net/http&quot;</span>
+
+<span style="color: #66d9ef">func</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">()</span> <span style="color: #f8f8f2">{</span>
+    <span style="color: #a6e22e">http</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">ListenAndServe</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;:8080&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">http</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">FileServer</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">http</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Dir</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;/app/mirror&quot;</span><span style="color: #f8f8f2">)))</span>
+<span style="color: #f8f8f2">}</span>
+</pre></div>
+
+<p>plus a scrach Docker container:</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #66d9ef">FROM</span><span style="color: #e6db74"> scratch</span>
+<span style="color: #66d9ef">ADD</span><span style="color: #e6db74"> main /</span>
+
+<span style="color: #66d9ef">CMD</span><span style="color: #e6db74"> [&quot;/main&quot;]</span>
+</pre></div>
+
+<p>We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror. Unfortunately, we ended up not using it becuase of some other reasons, but at least we didn&rsquo;t waste too much time, and I thought it was still pretty neat to be able to do that so quickly.</p>
+
+                <br>
+                <p><a href="https://sosimon.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
                 
-            </ul>
+            </div>
         </div>
     </div>
 </section>
+
 
 
 <script type="text/javascript">
@@ -182,5 +204,4 @@ try {
 
 </body>
 </html>
-
 
