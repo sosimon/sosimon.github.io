@@ -18,19 +18,21 @@
       <description>&lt;p&gt;I started learning Go about 3 months ago, back in July. One of the things that struck me was how easy, accessible, and fun it was, especially when it came to doing things on the web.&lt;/p&gt;
 
 &lt;p&gt;At work last week, there was a situation where an emergency firewall and router replacement would have interrupted communication to a static file server that we depedended on for CI. The solution was this:&lt;/p&gt;
-package main
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;
 
-import &#34;net/http&#34;
+&lt;span style=&#34;color: #f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
 
-func main() {
-    http.ListenAndServe(&#34;:8080&#34;, http.FileServer(http.Dir(&#34;/app/mirror&#34;)))
-}
+&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color: #a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;ListenAndServe&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;FileServer&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Dir&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;/app/mirror&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)))&lt;/span&gt;
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;plus a scrach Docker container:&lt;/p&gt;
-FROM scratch
-ADD main /
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; scratch&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;ADD&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; main /&lt;/span&gt;
 
-CMD [&#34;/main&#34;]
+&lt;span style=&#34;color: #66d9ef&#34;&gt;CMD&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; [&amp;quot;/main&amp;quot;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror. Unfortunately, we ended up not using it becuase of some other reasons, but at least we didn&amp;rsquo;t waste too much time, and I thought it was still pretty neat to be able to do that so quickly.&lt;/p&gt;
 </description>
@@ -43,16 +45,18 @@ CMD [&#34;/main&#34;]
       
       <guid>https://sosimon.github.io/blog/til-ternary-in-bash/</guid>
       <description>&lt;p&gt;I have been working with shell scripts for 4-5 years now, and I only recently saw, for the first time, someone shortcut the classic if/else/then statements:&lt;/p&gt;
-[ $condition == &#34;true&#34; ] &amp;&amp; echo &#34;true&#34; || echo &#34;false&#34;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;$condition&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;It took me a few minutes of staring at it to make sure it works the way I think it works.&lt;/p&gt;
 
 &lt;p&gt;Having seen this though, I am of the opinion that it&amp;rsquo;s probably better to be a bit more verbose:&lt;/p&gt;
-if [ $condition == &#34;true&#34; ]; then
-  echo &#34;true&#34;
-else
-  echo &#34;false&#34;
-fi
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;$condition&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;then&lt;/span&gt;
+  &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;else&lt;/span&gt;
+  &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #66d9ef&#34;&gt;fi&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;I think it&amp;rsquo;s more natural, easier to read and understand, better for the next guy/gal who needs to read and decipher your script.&lt;/p&gt;
 </description>
