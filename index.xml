@@ -15,7 +15,7 @@
       <pubDate>Mon, 10 Oct 2016 21:02:33 -0700</pubDate>
       
       <guid>https://sosimon.github.io/blog/go-static-file-server/</guid>
-      <description>&lt;p&gt;I started learning Go about 3 months ago, back in July. One of the things that struck me was how easy, accessible, and fun it was, especially when it came to doing things on the web.&lt;/p&gt;
+      <description>&lt;p&gt;I started learning Go about 3 months ago, back in July. One of the things that struck me early on was how easy, accessible, and fun it was, especially when it came to doing things on the web.&lt;/p&gt;
 
 &lt;p&gt;At work last week, there was a situation where an emergency firewall and router replacement would have interrupted communication to a static file server that we depedended on for CI. The solution was this:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;
@@ -34,7 +34,11 @@
 &lt;span style=&#34;color: #66d9ef&#34;&gt;CMD&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; [&amp;quot;/main&amp;quot;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror. Unfortunately, we ended up not using it becuase of some other reasons, but at least we didn&amp;rsquo;t waste too much time, and I thought it was still pretty neat to be able to do that so quickly.&lt;/p&gt;
+&lt;p&gt;We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gph.is/28LuUpP&#34; alt=&#34;wow&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, we ended up not using it becuase of some other reason, but at least we didn&amp;rsquo;t waste too much time.&lt;/p&gt;
 </description>
     </item>
     
