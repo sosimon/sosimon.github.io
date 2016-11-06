@@ -6,8 +6,63 @@
     <description>Recent content in Blog on Simon So</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Mon, 10 Oct 2016 21:02:33 -0700</lastBuildDate>
+    <lastBuildDate>Sat, 05 Nov 2016 21:54:03 -0700</lastBuildDate>
     <atom:link href="https://sosimon.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Setting up your own private VPN on Google Cloud</title>
+      <link>https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/</link>
+      <pubDate>Sat, 05 Nov 2016 21:54:03 -0700</pubDate>
+      
+      <guid>https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/</guid>
+      <description>&lt;p&gt;Why would I want to roll my own VPN, you ask? A couple reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you frequent coffee shops, or airports, and want a little extra security when using open, un-protected wifi networks&lt;/li&gt;
+&lt;li&gt;If you want to mask your IP address for whatever reason&lt;/li&gt;
+&lt;li&gt;Rolling your own could be cheaper than going with a commerical solution. All you need is a small Linux VM with a cloud provider, and the big players usually have free trials. AWS&amp;rsquo;s free tier lasts for 30 days; Google Cloud (GCE) runs for 60 days or $300, which ever comes first; and Digital Ocean droplets could be had for ~$5/month, much less if you don&amp;rsquo;t keep them running all the time.&lt;/li&gt;
+&lt;li&gt;For funsies!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;rsquo;ll be using Ubuntu 16.04 and OpenVPN as per &lt;a href=&#34;https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04&#34;&gt;this&lt;/a&gt; Digital Ocean tutorial, which has pretty much has everything we need. The only difference is we&amp;rsquo;re running the steps on a Google Cloud compute, rather than a Digital Ocean droplet.&lt;/p&gt;
+
+&lt;p&gt;First step is to create the compute instance. We can do this via the UI or CLI:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install openvpn easy-rsa
+sudo make-cadir /etc/openvpn/easy-rsa
+sudo su
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; /etc/openvpn/easy-rsa
+vi vars
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;source&lt;/span&gt; vars
+./clean-all
+./build-ca
+./build-key-server server
+./build-dh
+openvpn --genkey --secret keys/ta.key
+./build-key client1
+&lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; keys
+cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
+cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+gunzip /etc/openvpn/server.conf.gz
+vi /etc/opevpn/server.conf
+vi /etc/sysctl.conf
+vi /etc/ufw/before.rules
+vi /etc/default/ufw
+ufw allow 3141/tcp
+ufw allow OpenSSH
+ufw disable
+ufw &lt;span style=&#34;color: #f8f8f2&#34;&gt;enable&lt;/span&gt;
+systemctl start openvpn@server
+systemctl status openvpn@server
+systemctl &lt;span style=&#34;color: #f8f8f2&#34;&gt;enable&lt;/span&gt; openvpn@server
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Copy the client keys and CA cert (ca.crt, client1.crt, client1.key) to local machine and configure OpenVPN on the client.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Go: static file server</title>
