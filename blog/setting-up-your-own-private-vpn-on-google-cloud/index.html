@@ -13,10 +13,10 @@
 <title>
 
 
-     Blog 
+     Setting up your own private VPN on Google Cloud 
 
 </title>
-<link rel="canonical" href="https://sosimon.github.io/blog/">
+<link rel="canonical" href="https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/">
 
 
 <script type="text/javascript">
@@ -52,8 +52,6 @@
 >
 
 
-
-  <link href="https://sosimon.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Simon So" />
 
 
 
@@ -129,40 +127,84 @@
         </div>
     </div>
 </section>
-<section class="main">
+
+<section class="main post non-narrow zero-top-spacing">
     <div class="container">
         <div class="content">
-            <div class="page-heading">Blog</div>
-            <ul>
-                
-                <li class="post-item">
-    <div class="meta">Nov 5, 2016</div>
-    <a href="https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/"><div>Setting up your own private VPN on Google Cloud</div></a>
-</li>
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
 
-                
-                <li class="post-item">
-    <div class="meta">Oct 10, 2016</div>
-    <a href="https://sosimon.github.io/blog/go-static-file-server/"><div>Go: static file server</div></a>
-</li>
+    Setting up your own private VPN on Google Cloud
 
-                
-                <li class="post-item">
-    <div class="meta">Oct 8, 2016</div>
-    <a href="https://sosimon.github.io/blog/til-ternary-in-bash/"><div>TIL: ternary in bash</div></a>
-</li>
+</div>
 
-                
-                <li class="post-item">
-    <div class="meta">Oct 7, 2016</div>
-    <a href="https://sosimon.github.io/blog/first/"><div>First!</div></a>
-</li>
+                    <div class="initials"><a href="https://sosimon.github.io/">ss</a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Sat Nov 5 2016 21:54:03 PST">Nov 5, 2016</div>
+                    <div class="reading-time"><div class="middot"></div>2 minutes read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>Why would I want to roll my own VPN, you ask? A couple reasons:</p>
 
+<ul>
+<li>If you frequent coffee shops, or airports, and want a little extra security when using open, un-protected wifi networks</li>
+<li>If you want to mask your IP address for whatever reason</li>
+<li>Rolling your own could be cheaper than going with a commerical solution. All you need is a small Linux VM with a cloud provider, and the big players usually have free trials. AWS&rsquo;s free tier lasts for 30 days; Google Cloud (GCE) runs for 60 days or $300, which ever comes first; and Digital Ocean droplets could be had for ~$5/month, much less if you don&rsquo;t keep them running all the time.</li>
+<li>For funsies!</li>
+</ul>
+
+<p>We&rsquo;ll be using Ubuntu 16.04 and OpenVPN as per <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04">this</a> Digital Ocean tutorial, which has pretty much has everything we need. The only difference is we&rsquo;re running the steps on a Google Cloud compute, rather than a Digital Ocean droplet.</p>
+
+<p>First step is to create the compute instance. We can do this via the UI or CLI:</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span>gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
+</pre></div>
+
+<p>Follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span>sudo apt-get install openvpn easy-rsa
+sudo make-cadir /etc/openvpn/easy-rsa
+sudo su
+<span style="color: #f8f8f2">cd</span> /etc/openvpn/easy-rsa
+vi vars
+<span style="color: #f8f8f2">source</span> vars
+./clean-all
+./build-ca
+./build-key-server server
+./build-dh
+openvpn --genkey --secret keys/ta.key
+./build-key client1
+<span style="color: #f8f8f2">cd</span> keys
+cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
+cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+gunzip /etc/openvpn/server.conf.gz
+vi /etc/opevpn/server.conf
+vi /etc/sysctl.conf
+vi /etc/ufw/before.rules
+vi /etc/default/ufw
+ufw allow 3141/tcp
+ufw allow OpenSSH
+ufw disable
+ufw <span style="color: #f8f8f2">enable</span>
+systemctl start openvpn@server
+systemctl status openvpn@server
+systemctl <span style="color: #f8f8f2">enable</span> openvpn@server
+</pre></div>
+
+<p>Copy the client keys and CA cert (ca.crt, client1.crt, client1.key) to local machine and configure OpenVPN on the client.</p>
+
+                <br>
+                <p><a href="https://sosimon.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
                 
-            </ul>
+            </div>
         </div>
     </div>
 </section>
+
 
 
 <script type="text/javascript">
@@ -188,5 +230,4 @@ try {
 
 </body>
 </html>
-
 
