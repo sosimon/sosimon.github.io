@@ -148,17 +148,17 @@
             </div>
             <div class="markdown">
                 <p>I have been working with shell scripts for 4-5 years now, and I only recently saw, for the first time, someone shortcut the classic if/else/then statements:</p>
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #f92672">[</span> <span style="color: #f8f8f2">$condition</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;true&quot;</span> <span style="color: #f92672">]</span> <span style="color: #f92672">&amp;&amp;</span> <span style="color: #f8f8f2">echo</span> <span style="color: #e6db74">&quot;true&quot;</span> <span style="color: #f92672">||</span> <span style="color: #f8f8f2">echo</span> <span style="color: #e6db74">&quot;false&quot;</span>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #666666">[</span> <span style="color: #bb60d5">$condition</span> <span style="color: #666666">==</span> <span style="color: #4070a0">&quot;true&quot;</span> <span style="color: #666666">]</span> <span style="color: #666666">&amp;&amp;</span> <span style="color: #007020">echo</span> <span style="color: #4070a0">&quot;true&quot;</span> <span style="color: #666666">||</span> <span style="color: #007020">echo</span> <span style="color: #4070a0">&quot;false&quot;</span>
 </pre></div>
 
 <p>It took me a few minutes of staring at it to make sure it works the way I think it works.</p>
 
 <p>Having seen this though, I am of the opinion that it&rsquo;s probably better to be a bit more verbose:</p>
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #66d9ef">if</span> <span style="color: #f92672">[</span> <span style="color: #f8f8f2">$condition</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;true&quot;</span> <span style="color: #f92672">]</span><span style="color: #f8f8f2">;</span> <span style="color: #66d9ef">then</span>
-  <span style="color: #f8f8f2">echo</span> <span style="color: #e6db74">&quot;true&quot;</span>
-<span style="color: #66d9ef">else</span>
-  <span style="color: #f8f8f2">echo</span> <span style="color: #e6db74">&quot;false&quot;</span>
-<span style="color: #66d9ef">fi</span>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #007020; font-weight: bold">if</span> <span style="color: #666666">[</span> <span style="color: #bb60d5">$condition</span> <span style="color: #666666">==</span> <span style="color: #4070a0">&quot;true&quot;</span> <span style="color: #666666">]</span>; <span style="color: #007020; font-weight: bold">then</span>
+  <span style="color: #007020">echo</span> <span style="color: #4070a0">&quot;true&quot;</span>
+<span style="color: #007020; font-weight: bold">else</span>
+  <span style="color: #007020">echo</span> <span style="color: #4070a0">&quot;false&quot;</span>
+<span style="color: #007020; font-weight: bold">fi</span>
 </pre></div>
 
 <p>I think it&rsquo;s more natural, easier to read and understand, better for the next guy/gal who needs to read and decipher your script.</p>

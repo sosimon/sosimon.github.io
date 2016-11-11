@@ -150,20 +150,20 @@
                 <p>I started learning Go about 3 months ago, back in July. One of the things that struck me early on was how easy, accessible, and fun it was, especially when it came to doing things on the web.</p>
 
 <p>At work last week, there was a situation where an emergency firewall and router replacement would have interrupted communication to a static file server that we depedended on for CI. The solution was this:</p>
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #f92672">package</span> <span style="color: #a6e22e">main</span>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #007020; font-weight: bold">package</span> main
 
-<span style="color: #f92672">import</span> <span style="color: #e6db74">&quot;net/http&quot;</span>
+<span style="color: #007020; font-weight: bold">import</span> <span style="color: #4070a0">&quot;net/http&quot;</span>
 
-<span style="color: #66d9ef">func</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">()</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">http</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">ListenAndServe</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;:8080&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">http</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">FileServer</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">http</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Dir</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;/app/mirror&quot;</span><span style="color: #f8f8f2">)))</span>
-<span style="color: #f8f8f2">}</span>
+<span style="color: #007020; font-weight: bold">func</span> main() {
+    http.ListenAndServe(<span style="color: #4070a0">&quot;:8080&quot;</span>, http.FileServer(http.Dir(<span style="color: #4070a0">&quot;/app/mirror&quot;</span>)))
+}
 </pre></div>
 
 <p>plus a scrach Docker container:</p>
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #66d9ef">FROM</span><span style="color: #e6db74"> scratch</span>
-<span style="color: #66d9ef">ADD</span><span style="color: #e6db74"> main /</span>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #007020; font-weight: bold">FROM</span><span style="color: #4070a0"> scratch</span>
+<span style="color: #007020; font-weight: bold">ADD</span><span style="color: #4070a0"> main /</span>
 
-<span style="color: #66d9ef">CMD</span><span style="color: #e6db74"> [&quot;/main&quot;]</span>
+<span style="color: #007020; font-weight: bold">CMD</span><span style="color: #4070a0"> [&quot;/main&quot;]</span>
 </pre></div>
 
 <p>We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror.</p>

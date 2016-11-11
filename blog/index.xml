@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog on Simon So</title>
-    <link>https://sosimon.github.io/blog/index.xml</link>
+    <link>https://sosimon.github.io/blog/</link>
     <description>Recent content in Blog on Simon So</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
@@ -26,25 +26,34 @@
 
 &lt;p&gt;We&amp;rsquo;ll be using Ubuntu 16.04 and OpenVPN as per &lt;a href=&#34;https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04&#34;&gt;this&lt;/a&gt; Digital Ocean tutorial, which has pretty much has everything we need. The only difference is we&amp;rsquo;re running the steps on a Google Cloud compute, rather than a Digital Ocean droplet.&lt;/p&gt;
 
-&lt;p&gt;First step is to create the compute instance. We can do this via the UI or CLI:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
+&lt;p&gt;Step 1: create the compute instance. We can do this via the UI or CLI:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #f0f0f0&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
 &lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):&lt;/p&gt;
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install openvpn easy-rsa
+&lt;p&gt;Step 2: follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #f0f0f0&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Install OpenVPN and EasyRSA&lt;/span&gt;
+sudo apt-get install openvpn easy-rsa
 sudo make-cadir /etc/openvpn/easy-rsa
+
+&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Configure env vars for generating certs&lt;/span&gt;
 sudo su
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; /etc/openvpn/easy-rsa
+&lt;span style=&#34;color: #007020&#34;&gt;cd&lt;/span&gt; /etc/openvpn/easy-rsa
 vi vars
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;source&lt;/span&gt; vars
+&lt;span style=&#34;color: #007020&#34;&gt;source&lt;/span&gt; vars
+
+&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Clean, create CA cert, server and dh keys&lt;/span&gt;
 ./clean-all
 ./build-ca
 ./build-key-server server
 ./build-dh
 openvpn --genkey --secret keys/ta.key
+
+&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Create client key pair&lt;/span&gt;
 ./build-key client1
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;cd&lt;/span&gt; keys
+&lt;span style=&#34;color: #007020&#34;&gt;cd&lt;/span&gt; keys
 cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
+
+&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Configure server.conf, sysctl.conf, and firewall/NAT rules&lt;/span&gt;
 cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
 gunzip /etc/openvpn/server.conf.gz
 vi /etc/opevpn/server.conf
@@ -53,14 +62,20 @@ vi /etc/ufw/before.rules
 vi /etc/default/ufw
 ufw allow 3141/tcp
 ufw allow OpenSSH
+
+&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Restart ufw&lt;/span&gt;
 ufw disable
-ufw &lt;span style=&#34;color: #f8f8f2&#34;&gt;enable&lt;/span&gt;
+ufw &lt;span style=&#34;color: #007020&#34;&gt;enable&lt;/span&gt;
+
+&lt;span style=&#34;color: #60a0b0; font-style: italic&#34;&gt;# Start OpenVPN and enable daemon (auto-start on server reboot)&lt;/span&gt;
 systemctl start openvpn@server
 systemctl status openvpn@server
-systemctl &lt;span style=&#34;color: #f8f8f2&#34;&gt;enable&lt;/span&gt; openvpn@server
+systemctl &lt;span style=&#34;color: #007020&#34;&gt;enable&lt;/span&gt; openvpn@server
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Copy the client keys and CA cert (ca.crt, client1.crt, client1.key) to local machine and configure OpenVPN on the client.&lt;/p&gt;
+
+&lt;p&gt;Step 3: PROFIT!&lt;/p&gt;
 </description>
     </item>
     
@@ -73,20 +88,20 @@ systemctl &lt;span style=&#34;color: #f8f8f2&#34;&gt;enable&lt;/span&gt; openvpn
       <description>&lt;p&gt;I started learning Go about 3 months ago, back in July. One of the things that struck me early on was how easy, accessible, and fun it was, especially when it came to doing things on the web.&lt;/p&gt;
 
 &lt;p&gt;At work last week, there was a situation where an emergency firewall and router replacement would have interrupted communication to a static file server that we depedended on for CI. The solution was this:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #f0f0f0&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;package&lt;/span&gt; main
 
-&lt;span style=&#34;color: #f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;net/http&amp;quot;&lt;/span&gt;
 
-&lt;span style=&#34;color: #66d9ef&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;ListenAndServe&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color: #a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;FileServer&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;http&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color: #a6e22e&#34;&gt;Dir&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;/app/mirror&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;)))&lt;/span&gt;
-&lt;span style=&#34;color: #f8f8f2&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;func&lt;/span&gt; main() {
+    http.ListenAndServe(&lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;:8080&amp;quot;&lt;/span&gt;, http.FileServer(http.Dir(&lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;/app/mirror&amp;quot;&lt;/span&gt;)))
+}
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;plus a scrach Docker container:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; scratch&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;ADD&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; main /&lt;/span&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #f0f0f0&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color: #4070a0&#34;&gt; scratch&lt;/span&gt;
+&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;ADD&lt;/span&gt;&lt;span style=&#34;color: #4070a0&#34;&gt; main /&lt;/span&gt;
 
-&lt;span style=&#34;color: #66d9ef&#34;&gt;CMD&lt;/span&gt;&lt;span style=&#34;color: #e6db74&#34;&gt; [&amp;quot;/main&amp;quot;]&lt;/span&gt;
+&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;CMD&lt;/span&gt;&lt;span style=&#34;color: #4070a0&#34;&gt; [&amp;quot;/main&amp;quot;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror.&lt;/p&gt;
@@ -104,17 +119,17 @@ systemctl &lt;span style=&#34;color: #f8f8f2&#34;&gt;enable&lt;/span&gt; openvpn
       
       <guid>https://sosimon.github.io/blog/til-ternary-in-bash/</guid>
       <description>&lt;p&gt;I have been working with shell scripts for 4-5 years now, and I only recently saw, for the first time, someone shortcut the classic if/else/then statements:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;$condition&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #f0f0f0&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #666666&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #bb60d5&#34;&gt;$condition&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color: #007020&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color: #007020&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;It took me a few minutes of staring at it to make sure it works the way I think it works.&lt;/p&gt;
 
 &lt;p&gt;Having seen this though, I am of the opinion that it&amp;rsquo;s probably better to be a bit more verbose:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34; style=&#34;background: #272822&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #f8f8f2&#34;&gt;$condition&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color: #f8f8f2&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #66d9ef&#34;&gt;then&lt;/span&gt;
-  &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;else&lt;/span&gt;
-  &lt;span style=&#34;color: #f8f8f2&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #e6db74&#34;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
-&lt;span style=&#34;color: #66d9ef&#34;&gt;fi&lt;/span&gt;
+&lt;div class=&#34;highlight&#34; style=&#34;background: #f0f0f0&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;[&lt;/span&gt; &lt;span style=&#34;color: #bb60d5&#34;&gt;$condition&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span style=&#34;color: #666666&#34;&gt;]&lt;/span&gt;; &lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;then&lt;/span&gt;
+  &lt;span style=&#34;color: #007020&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;else&lt;/span&gt;
+  &lt;span style=&#34;color: #007020&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color: #4070a0&#34;&gt;&amp;quot;false&amp;quot;&lt;/span&gt;
+&lt;span style=&#34;color: #007020; font-weight: bold&#34;&gt;fi&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;I think it&amp;rsquo;s more natural, easier to read and understand, better for the next guy/gal who needs to read and decipher your script.&lt;/p&gt;

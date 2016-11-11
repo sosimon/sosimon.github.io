@@ -158,25 +158,34 @@
 
 <p>We&rsquo;ll be using Ubuntu 16.04 and OpenVPN as per <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04">this</a> Digital Ocean tutorial, which has pretty much has everything we need. The only difference is we&rsquo;re running the steps on a Google Cloud compute, rather than a Digital Ocean droplet.</p>
 
-<p>First step is to create the compute instance. We can do this via the UI or CLI:</p>
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span>gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
+<p>Step 1: create the compute instance. We can do this via the UI or CLI:</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span>gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
 </pre></div>
 
-<p>Follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):</p>
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span>sudo apt-get install openvpn easy-rsa
+<p>Step 2: follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #60a0b0; font-style: italic"># Install OpenVPN and EasyRSA</span>
+sudo apt-get install openvpn easy-rsa
 sudo make-cadir /etc/openvpn/easy-rsa
+
+<span style="color: #60a0b0; font-style: italic"># Configure env vars for generating certs</span>
 sudo su
-<span style="color: #f8f8f2">cd</span> /etc/openvpn/easy-rsa
+<span style="color: #007020">cd</span> /etc/openvpn/easy-rsa
 vi vars
-<span style="color: #f8f8f2">source</span> vars
+<span style="color: #007020">source</span> vars
+
+<span style="color: #60a0b0; font-style: italic"># Clean, create CA cert, server and dh keys</span>
 ./clean-all
 ./build-ca
 ./build-key-server server
 ./build-dh
 openvpn --genkey --secret keys/ta.key
+
+<span style="color: #60a0b0; font-style: italic"># Create client key pair</span>
 ./build-key client1
-<span style="color: #f8f8f2">cd</span> keys
+<span style="color: #007020">cd</span> keys
 cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
+
+<span style="color: #60a0b0; font-style: italic"># Configure server.conf, sysctl.conf, and firewall/NAT rules</span>
 cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
 gunzip /etc/openvpn/server.conf.gz
 vi /etc/opevpn/server.conf
@@ -185,14 +194,20 @@ vi /etc/ufw/before.rules
 vi /etc/default/ufw
 ufw allow 3141/tcp
 ufw allow OpenSSH
+
+<span style="color: #60a0b0; font-style: italic"># Restart ufw</span>
 ufw disable
-ufw <span style="color: #f8f8f2">enable</span>
+ufw <span style="color: #007020">enable</span>
+
+<span style="color: #60a0b0; font-style: italic"># Start OpenVPN and enable daemon (auto-start on server reboot)</span>
 systemctl start openvpn@server
 systemctl status openvpn@server
-systemctl <span style="color: #f8f8f2">enable</span> openvpn@server
+systemctl <span style="color: #007020">enable</span> openvpn@server
 </pre></div>
 
 <p>Copy the client keys and CA cert (ca.crt, client1.crt, client1.key) to local machine and configure OpenVPN on the client.</p>
+
+<p>Step 3: PROFIT!</p>
 
                 <br>
                 <p><a href="https://sosimon.github.io/blog/">Back to posts</a></p>
