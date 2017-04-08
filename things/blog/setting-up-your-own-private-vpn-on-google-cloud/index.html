@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Don&#39;t panic">
+
+<base href="https://sosimon.github.io/">
+<title>
+
+
+     Setting up your own private VPN on Google Cloud 
+
+</title>
+<link rel="canonical" href="https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/">
+
+
+<script type="text/javascript">
+    var baseURL = 'https:\/\/sosimon.github.io\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+
+
+
+
+
+<link rel="stylesheet" href="https://sosimon.github.io/css/reset.css">
+<link rel="stylesheet" href="https://sosimon.github.io/css/pygments.css">
+<link rel="stylesheet" href="https://sosimon.github.io/css/main.css">
+
+
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://sosimon.github.io/img/favicon.ico"
+
+>
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+<script>document.body.className += " fade-out";</script>
+<script>window.onload = function () { document.body.className = "";}</script>
+
+<section class="header"> 
+    <div class="container">
+        <div class="content">
+            <a href="https://sosimon.github.io/"><div class="name">Simon So</div></a>
+            <nav>
+                <ul>
+                    <a href="https://sosimon.github.io/blog/"><li>Blogs</li></a>
+                    <a href="https://sosimon.github.io/about/"><li>About</li></a>
+                    <a href="https://sosimon.github.io/things/"><li>Things</li></a>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+
+        
+            <a href="//github.com/sosimon" target="_blank">
+                <i class="icon ion-social-github"></i>
+            </a>
+        
+        
+        
+            <a href="//twitter.com/sosimon" target="_blank">
+                <i class="icon ion-social-twitter"></i>
+            </a>
+        
+
+        
+            <a href="//linkedin.com/in/simon-so-3a609023" target="_blank">
+                <i class="icon ion-social-linkedin"></i>
+            </a>
+        
+
+        
+
+        
+
+        
+            <a href="mailto:simon.so@gmail.com">
+                <i class="icon ion-ios-email larger"></i>
+            </a>
+        
+        
+        
+            <a href="https://sosimon.github.io/index.xml">
+                <i class="icon ion-social-rss larger"></i>
+            </a>
+        
+        
+        </div>
+    </div>
+</section>
+
+<section class="footer">
+    <div class="container">
+        <div class="content">
+            powered by <a href="https://gohugo.io/">hugo</a>
+        </div>
+    </div>
+</section>
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Setting up your own private VPN on Google Cloud
+
+</div>
+
+                    <div class="initials"><a href="https://sosimon.github.io/">ss</a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Sat Nov 5 2016 21:54:03 PST">Nov 5, 2016</div>
+                    <div class="reading-time"><div class="middot"></div>2 minutes read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>Why would I want to roll my own VPN, you ask? A couple reasons:</p>
+
+<ul>
+<li>If you frequent coffee shops, or airports, and want a little extra security when using open, un-protected wifi networks</li>
+<li>If you want to mask your IP address for whatever reason</li>
+<li>Rolling your own could be cheaper than going with a commerical solution. All you need is a small Linux VM with a cloud provider, and the big players usually have free trials. AWS&rsquo;s free tier lasts for 30 days; Google Cloud (GCE) runs for 60 days or $300, which ever comes first; and Digital Ocean droplets could be had for ~$5/month, much less if you don&rsquo;t keep them running all the time.</li>
+<li>For funsies!</li>
+</ul>
+
+<p>We&rsquo;ll be using Ubuntu 16.04 and OpenVPN as per <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04">this</a> Digital Ocean tutorial, which has pretty much has everything we need. The only difference is we&rsquo;re running the steps on a Google Cloud compute, rather than a Digital Ocean droplet.</p>
+
+<p>Step 1: create the compute instance. We can do this via the UI or CLI:</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span>gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
+</pre></div>
+
+<p>Step 2: follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #60a0b0; font-style: italic"># Install OpenVPN and EasyRSA</span>
+sudo apt-get install openvpn easy-rsa
+sudo make-cadir /etc/openvpn/easy-rsa
+
+<span style="color: #60a0b0; font-style: italic"># Configure env vars for generating certs</span>
+sudo su
+<span style="color: #007020">cd</span> /etc/openvpn/easy-rsa
+vi vars
+<span style="color: #007020">source</span> vars
+
+<span style="color: #60a0b0; font-style: italic"># Clean, create CA cert, server and dh keys</span>
+./clean-all
+./build-ca
+./build-key-server server
+./build-dh
+openvpn --genkey --secret keys/ta.key
+
+<span style="color: #60a0b0; font-style: italic"># Create client key pair</span>
+./build-key client1
+<span style="color: #007020">cd</span> keys
+cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
+
+<span style="color: #60a0b0; font-style: italic"># Configure server.conf, sysctl.conf, and firewall/NAT rules</span>
+cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+gunzip /etc/openvpn/server.conf.gz
+vi /etc/opevpn/server.conf
+vi /etc/sysctl.conf
+vi /etc/ufw/before.rules
+vi /etc/default/ufw
+ufw allow 3141/tcp
+ufw allow OpenSSH
+
+<span style="color: #60a0b0; font-style: italic"># Restart ufw</span>
+ufw disable
+ufw <span style="color: #007020">enable</span>
+
+<span style="color: #60a0b0; font-style: italic"># Start OpenVPN and enable daemon (auto-start on server reboot)</span>
+systemctl start openvpn@server
+systemctl status openvpn@server
+systemctl <span style="color: #007020">enable</span> openvpn@server
+</pre></div>
+
+<p>Copy the client keys and CA cert (ca.crt, client1.crt, client1.key) to local machine and configure OpenVPN on the client.</p>
+
+<p>Step 3: PROFIT!</p>
+
+                <br>
+                <p><a href="https://sosimon.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'sosimon';
+    var disqus_identifier = 'https:\/\/sosimon.github.io\/blog\/setting-up-your-own-private-vpn-on-google-cloud\/';
+    var disqus_title = 'Setting up your own private VPN on Google Cloud';
+    var disqus_url = 'https:\/\/sosimon.github.io\/blog\/setting-up-your-own-private-vpn-on-google-cloud\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+    var pageTracker = _gat._getTracker("UA-85413734-1");
+    pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+</body>
+</html>
+

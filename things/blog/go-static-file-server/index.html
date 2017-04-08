@@ -2,7 +2,6 @@
 <html lang="en-US">
 
 <head>
-	<meta name="generator" content="Hugo 0.16" />
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <meta name="HandheldFriendly" content="True">
@@ -14,10 +13,10 @@
 <title>
 
 
-     Simon So 
+     Go: static file server 
 
 </title>
-<link rel="canonical" href="https://sosimon.github.io/">
+<link rel="canonical" href="https://sosimon.github.io/blog/go-static-file-server/">
 
 
 <script type="text/javascript">
@@ -53,8 +52,6 @@
 >
 
 
-
-  <link href="https://sosimon.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Simon So" />
 
 
 
@@ -130,52 +127,76 @@
         </div>
     </div>
 </section>
-<section class="main">
+
+<section class="main post non-narrow zero-top-spacing">
     <div class="container">
         <div class="content">
-            <div class="page-heading">Blog</div>
-            <ul>
-            
-                
-                    <li class="post-item">
-    <div class="meta">Nov 5, 2016</div>
-    <a href="https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/"><div>Setting up your own private VPN on Google Cloud</div></a>
-</li>
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
 
-                
-            
-                
-                    <li class="post-item">
-    <div class="meta">Oct 10, 2016</div>
-    <a href="https://sosimon.github.io/blog/go-static-file-server/"><div>Go: static file server</div></a>
-</li>
+    Go: static file server
 
-                
-            
-                
-                    <li class="post-item">
-    <div class="meta">Oct 8, 2016</div>
-    <a href="https://sosimon.github.io/blog/til-ternary-in-bash/"><div>TIL: ternary in bash</div></a>
-</li>
+</div>
 
-                
-            
-                
-            
-                
-            
-                
-                    <li class="post-item">
-    <div class="meta">Oct 7, 2016</div>
-    <a href="https://sosimon.github.io/blog/first/"><div>First!</div></a>
-</li>
+                    <div class="initials"><a href="https://sosimon.github.io/">ss</a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Mon Oct 10 2016 21:02:33 PST">Oct 10, 2016</div>
+                    <div class="reading-time"><div class="middot"></div>1 minute read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>I started learning Go about 3 months ago, back in July. One of the things that struck me early on was how easy, accessible, and fun it was, especially when it came to doing things on the web.</p>
 
-                
-            
-            </ul>
+<p>At work last week, there was a situation where an emergency firewall and router replacement would have interrupted communication to a static file server that we depedended on for CI. The solution was this:</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #007020; font-weight: bold">package</span> main
+
+<span style="color: #007020; font-weight: bold">import</span> <span style="color: #4070a0">&quot;net/http&quot;</span>
+
+<span style="color: #007020; font-weight: bold">func</span> main() {
+    http.ListenAndServe(<span style="color: #4070a0">&quot;:8080&quot;</span>, http.FileServer(http.Dir(<span style="color: #4070a0">&quot;/app/mirror&quot;</span>)))
+}
+</pre></div>
+
+<p>plus a scrach Docker container:</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #007020; font-weight: bold">FROM</span><span style="color: #4070a0"> scratch</span>
+<span style="color: #007020; font-weight: bold">ADD</span><span style="color: #4070a0"> main /</span>
+
+<span style="color: #007020; font-weight: bold">CMD</span><span style="color: #4070a0"> [&quot;/main&quot;]</span>
+</pre></div>
+
+<p>We spun up a new VM and deployed in less time than it took to SCP files over to the new mirror.</p>
+
+<p><img src="http://i.giphy.com/l46CkATpdyLwLI7vi.gif" alt="wow" /></p>
+
+<p>Unfortunately, we ended up not using it becuase of some other reason, but at least we didn&rsquo;t waste too much time.</p>
+
+                <br>
+                <p><a href="https://sosimon.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'sosimon';
+    var disqus_identifier = 'https:\/\/sosimon.github.io\/blog\/go-static-file-server\/';
+    var disqus_title = 'Go: static file server';
+    var disqus_url = 'https:\/\/sosimon.github.io\/blog\/go-static-file-server\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
         </div>
     </div>
 </section>
+
 
 
 <script type="text/javascript">
@@ -201,5 +222,4 @@ try {
 
 </body>
 </html>
-
 
