@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Don&#39;t panic">
+
+
+    <meta property="twitter:site" content="@sosimon">
+
+<meta property="twitter:title" content="Serverless and AWS Lambda">
+
+    <meta property="twitter:card" content="summary">
+
+<meta property="twitter:description" content="">
+
+<title>
+
+
+     Simon So - Serverless and AWS Lambda 
+
+</title>
+<link rel="canonical" href="https://sosimon.github.io/blog/serverless-and-aws-lambda/">
+
+
+<link rel="stylesheet" href="https://sosimon.github.io/css/main.v1.0.0.css">
+
+
+  <link rel="stylesheet" href="https://sosimon.github.io/css/highlight.min.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://sosimon.github.io/img/favicon.ico"
+
+>
+
+
+
+
+</head>
+
+
+<body>
+
+
+<section class="header">
+
+    <div class="container">
+        <div class="content">
+            <a href="https://sosimon.github.io/"><div class="name"><h1>Simon So</h1></div></a>
+            <nav>
+                <ul>
+                    
+                        <a href="https://sosimon.github.io/blog/"><li>Blog</li></a>
+                    
+                    
+                        
+                    
+                        
+                            
+                        
+                    
+                    
+                        
+                            <a href="https://sosimon.github.io/about/"><li>about</li></a>
+                        
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Serverless and AWS Lambda
+
+</div>
+
+                </div>
+                <div class="meta">
+                    <div class="date" title="Fri Apr 21 2017 20:57:22 PST">Apr 21, 2017</div>
+                    
+                        
+                    
+                    <div class="reading-time"><div class="middot"></div>2 minute read</div>
+                    <div class="tags">
+                        <ul>
+                          
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="markdown">
+                
+    <p>Serverless compute and architecture has been all gaining a lot attention lately, and AWS, once again, is leading the charge with the introduction of AWS Lambda a few years ago. The basic idea is that instead of the traditional model where you run an application on a compute and pay for 100% of the time that the compute is running, regardless of whether your application is actually serving traffic, you refactor your application into Lambda functions which respond to requests on-demand. You only get charged for the time that the Lambda function is running, and thus saving you money over a traditional compute. Obviously, your mileage may vary, but if we are purely looking at cost, I would presume spiky work loads would benefit the most from switching to serverless, compared to slow and steady work loads.</p>
+
+<p>There are other benefits such as modularity and loose coupling, which lends itself nicely to agile SDLCs and continuous delivery. Changes can be isolated to a sub-set of Lambda functions, so there is no need to rebuild and redeploy the entire application. In fact, when you think about it, serverless is a more extreme version of the microservices. Advantages, and disadvantages, of microservices apply here to some extent. One of the main disadvantages, from a developers perspective, is the difficulty debugging a serverless application. And of course, AWS has already come up with something - Step Functions - to help aleviate some of this pain.</p>
+
+<p>In the spirit of getting my hands dirty, in the next post, I plan to set up a Lambda function, configure API Gateway, and create a simple web frontend that triggers said function.</p>
+
+
+                <br>
+            </div>
+            
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'sosimon';
+    var disqus_identifier = 'https:\/\/sosimon.github.io\/blog\/serverless-and-aws-lambda\/';
+    var disqus_title = 'Serverless and AWS Lambda';
+    var disqus_url = 'https:\/\/sosimon.github.io\/blog\/serverless-and-aws-lambda\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="footer">
+    <div class="container">
+        <div class="icons">
+
+        
+            <a href="https://github.com/sosimon" target="_blank">
+                <img class="icon" src="https://sosimon.github.io/img/github.svg" alt="github" />
+            </a>
+        
+
+        
+            <a href="https://twitter.com/sosimon" target="_blank">
+                <img class="icon" src="https://sosimon.github.io/img/twitter.svg" alt="twitter" />
+            </a>
+        
+
+        
+            <a href="https://www.linkedin.com/in/simon-so-3a609023" target="_blank">
+                <img class="icon" src="https://sosimon.github.io/img/linkedin.svg" alt="linkedin" />
+            </a>
+        
+
+        
+            <a href="mailto:simon.so@gmail.com">
+                <img class="icon" src="https://sosimon.github.io/img/email.svg" alt="email" />
+            </a>
+        
+
+        
+            <a href="https://sosimon.github.io/index.xml">
+                <img class="icon" src="https://sosimon.github.io/img/rss.svg" alt="rss" />
+            </a>
+        
+
+        </div>
+    </div>
+</section>
+
+
+  <script src="https://sosimon.github.io/js/highlight.min.js" defer></script>
+  
+
+
+
+
+
+
+<script>
+  window.onload = function() {
+    
+      hljs.initHighlighting();
+    
+    
+  };
+</script>
+
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,700,700i" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700" rel="stylesheet">
+
+
+
+</body>
+</html>
+

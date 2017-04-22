@@ -6,10 +6,19 @@
     <description>Recent content in Blog on Simon So</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sat, 05 Nov 2016 21:54:03 -0700</lastBuildDate>
+    <lastBuildDate>Fri, 21 Apr 2017 20:57:22 -0700</lastBuildDate>
     
 	<atom:link href="https://sosimon.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Serverless and AWS Lambda</title>
+      <link>https://sosimon.github.io/blog/serverless-and-aws-lambda/</link>
+      <pubDate>Fri, 21 Apr 2017 20:57:22 -0700</pubDate>
+      
+      <guid>https://sosimon.github.io/blog/serverless-and-aws-lambda/</guid>
+      <description>Serverless compute and architecture has been all gaining a lot attention lately, and AWS, once again, is leading the charge with the introduction of AWS Lambda a few years ago. The basic idea is that instead of the traditional model where you run an application on a compute and pay for 100% of the time that the compute is running, regardless of whether your application is actually serving traffic, you refactor your application into Lambda functions which respond to requests on-demand.</description>
+    </item>
     
     <item>
       <title>Setting up your own private VPN on Google Cloud</title>
