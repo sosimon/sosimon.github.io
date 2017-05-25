@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-1/</loc>
+    <lastmod>2017-05-25T09:43:48-07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://sosimon.github.io/blog/serverless-and-aws-lambda/</loc>
     <lastmod>2017-04-21T20:57:22-07:00</lastmod>
   </url>
@@ -33,7 +38,7 @@
   
   <url>
     <loc>https://sosimon.github.io/blog/</loc>
-    <lastmod>2017-04-21T20:57:22-07:00</lastmod>
+    <lastmod>2017-05-25T09:43:48-07:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -44,7 +49,7 @@
   
   <url>
     <loc>https://sosimon.github.io/</loc>
-    <lastmod>2017-04-21T20:57:22-07:00</lastmod>
+    <lastmod>2017-05-25T09:43:48-07:00</lastmod>
     <priority>0</priority>
   </url>
   

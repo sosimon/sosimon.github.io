@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Don&#39;t panic">
+
+
+    <meta property="twitter:site" content="@sosimon">
+
+<meta property="twitter:title" content="AWS Lambda and API Gateway Example (Part 1)">
+
+    <meta property="twitter:card" content="summary">
+
+<meta property="twitter:description" content="">
+
+<title>
+
+
+     Simon So - AWS Lambda and API Gateway Example (Part 1) 
+
+</title>
+<link rel="canonical" href="https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-1/">
+
+
+<link rel="stylesheet" href="https://sosimon.github.io/css/main.v1.0.0.css">
+
+
+  <link rel="stylesheet" href="https://sosimon.github.io/css/highlight.min.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://sosimon.github.io/img/favicon.ico"
+
+>
+
+
+
+
+</head>
+
+
+<body>
+
+
+<section class="header">
+
+    <div class="container">
+        <div class="content">
+            <a href="https://sosimon.github.io/"><div class="name"><h1>Simon So</h1></div></a>
+            <nav>
+                <ul>
+                    
+                        <a href="https://sosimon.github.io/blog/"><li>Blog</li></a>
+                    
+                    
+                        
+                    
+                        
+                            
+                        
+                    
+                    
+                        
+                            <a href="https://sosimon.github.io/about/"><li>about</li></a>
+                        
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    AWS Lambda and API Gateway Example (Part 1)
+
+</div>
+
+                </div>
+                <div class="meta">
+                    <div class="date" title="Thu May 25 2017 09:43:48 PST">May 25, 2017</div>
+                    
+                        
+                    
+                    <div class="reading-time"><div class="middot"></div>3 minute read</div>
+                    <div class="tags">
+                        <ul>
+                          
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="markdown">
+                
+    
+
+<p>In the previous post, I wrote briefly about AWS Lambda and serverless computing in general. In this post, I&rsquo;ll go through the creation and setup with a simple Lambda function, and hook it up to a public REST API using API Gateway. This example pretty much as simple as it can get, so while it does not do anything really useful, it should provide a taste of what it takes to set things up. I will point out a few gotchas along the way as well.</p>
+
+<h2 id="creating-the-lambda-function">Creating the Lambda function</h2>
+
+<p>When you first click on <code>Create a Lambda function</code>, you will be ask to select a blueprint. For our purpose, we want to start from scratch, so select <code>Blank Function</code>.</p>
+
+<p><img src="http://i.imgur.com/pJYfRMw.png" alt="Create a Lambda function" /></p>
+
+<p>We can skip the <code>Configure triggers</code> for now. We will configure the API Gateway trigger later.</p>
+
+<p>On the <code>Configure function</code> page, enter <code>randomString</code> for the name of the function, and select <code>Python 2.7</code> for the runtime. You can name it whatever you like, of course, but the function I&rsquo;m using generates a random alphanumeric string when it&rsquo;s invoked.</p>
+
+<p><img src="http://i.imgur.com/lO7lpDd.png" alt="Configure function" /></p>
+
+<p>The body of the function looks like this:</p>
+<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #007020; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">string</span>
+<span style="color: #007020; font-weight: bold">import</span> <span style="color: #0e84b5; font-weight: bold">random</span>
+
+<span style="color: #007020; font-weight: bold">def</span> <span style="color: #06287e">lambda_handler</span>(event, context):
+    l <span style="color: #666666">=</span> <span style="color: #40a070">32</span>
+    <span style="color: #007020; font-weight: bold">if</span> <span style="color: #4070a0">&quot;queryStringParameters&quot;</span> <span style="color: #007020; font-weight: bold">in</span> event:
+        queryString <span style="color: #666666">=</span> event[<span style="color: #4070a0">&quot;queryStringParameters&quot;</span>]
+        <span style="color: #007020; font-weight: bold">if</span> <span style="color: #007020">isinstance</span>(queryString, <span style="color: #007020">dict</span>) <span style="color: #007020; font-weight: bold">and</span> <span style="color: #4070a0">&quot;length&quot;</span> <span style="color: #007020; font-weight: bold">in</span> queryString<span style="color: #666666">.</span>keys():
+            l <span style="color: #666666">=</span> queryString[<span style="color: #4070a0">&#39;length&#39;</span>]
+            <span style="color: #007020; font-weight: bold">if</span> <span style="color: #007020; font-weight: bold">not</span> <span style="color: #007020">isinstance</span>(l, <span style="color: #007020">int</span>):
+                l <span style="color: #666666">=</span> <span style="color: #007020">int</span>(l)
+    resp <span style="color: #666666">=</span> {
+        <span style="color: #4070a0">&quot;statusCode&quot;</span>: <span style="color: #40a070">200</span>,
+        <span style="color: #4070a0">&quot;headers&quot;</span>: {
+            <span style="color: #4070a0">&quot;Access-Control-Allow-Origin&quot;</span>: <span style="color: #4070a0">&quot;*&quot;</span>
+        },
+        <span style="color: #4070a0">&quot;body&quot;</span>: <span style="color: #4070a0">&#39;&#39;</span><span style="color: #666666">.</span>join(random<span style="color: #666666">.</span>SystemRandom()<span style="color: #666666">.</span>choice(string<span style="color: #666666">.</span>ascii_letters <span style="color: #666666">+</span> \
+        string<span style="color: #666666">.</span>digits) <span style="color: #007020; font-weight: bold">for</span> _ <span style="color: #007020; font-weight: bold">in</span> <span style="color: #007020">xrange</span>(l))
+    }
+    <span style="color: #007020; font-weight: bold">return</span> resp
+</pre></div>
+
+<p><code>lambda_handler(event, context)</code> is the standard entry point for Lambda functions in Python. You can find out more in the <a href="http://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html">docs</a>. The function tries to get the <code>length</code> query parameter if it exists, otherwise, it defaults to 32 characters.</p>
+
+<p>A couple important things to highlight here about the response. It <em>must</em> have <code>statusCode</code>, <code>headers</code>, and <code>body</code>, otherwise it won&rsquo;t work with API Gateway. The <code>Access-Control-Allow-Origin</code> header is set to <code>*</code> to allow CORS (Cross-Origin Resource Sharing), which lets a web frontend from another domain to access our API Gateway resource (which we have not setup yet).</p>
+
+<p>Finally, you will need to populate the handler and role. The handler should be defaulted for you already. For the role, if this is the first lambda function for you, you will need to create a new one. This is the role that the lambda function will assume when it is running, so the task is to make sure it has the proper access to all the resources it need to run, and nothing more. It&rsquo;s totally fine go with the default (which only has CloudWatch log access) right now - our random string generator is self-sufficient and has no depedencies on any other AWS resources.</p>
+
+<p><img src="http://i.imgur.com/aM5Mvev.png" alt="Handler and Role" /></p>
+
+<p>Review, confirm, and create the function. After the function has been create, you can test the function by clicking the <code>Test</code> button, which brings up a modal where you can specify some input parameters. Our function doesn&rsquo;t require any parameters so you can go ahead and hit <code>Save and Test</code></p>
+
+<p><img src="http://i.imgur.com/lTNeglg.png" alt="Test your function" /></p>
+
+<p>If everything worked, you should see a successful 200 response, with a random alphanumeric string in the body. Great success!</p>
+
+<p><img src="http://i.imgur.com/CQh3Zqm.png" alt="Success" /></p>
+
+
+                <br>
+            </div>
+            
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'sosimon';
+    var disqus_identifier = 'https:\/\/sosimon.github.io\/blog\/aws-lambda-and-api-gateway-example-part-1\/';
+    var disqus_title = 'AWS Lambda and API Gateway Example (Part 1)';
+    var disqus_url = 'https:\/\/sosimon.github.io\/blog\/aws-lambda-and-api-gateway-example-part-1\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="footer">
+    <div class="container">
+        <div class="icons">
+
+        
+            <a href="https://github.com/sosimon" target="_blank">
+                <img class="icon" src="https://sosimon.github.io/img/github.svg" alt="github" />
+            </a>
+        
+
+        
+            <a href="https://twitter.com/sosimon" target="_blank">
+                <img class="icon" src="https://sosimon.github.io/img/twitter.svg" alt="twitter" />
+            </a>
+        
+
+        
+            <a href="https://www.linkedin.com/in/simon-so-3a609023" target="_blank">
+                <img class="icon" src="https://sosimon.github.io/img/linkedin.svg" alt="linkedin" />
+            </a>
+        
+
+        
+            <a href="mailto:simon.so@gmail.com">
+                <img class="icon" src="https://sosimon.github.io/img/email.svg" alt="email" />
+            </a>
+        
+
+        
+            <a href="https://sosimon.github.io/index.xml">
+                <img class="icon" src="https://sosimon.github.io/img/rss.svg" alt="rss" />
+            </a>
+        
+
+        </div>
+    </div>
+</section>
+
+
+  <script src="https://sosimon.github.io/js/highlight.min.js" defer></script>
+  
+
+
+
+
+
+
+<script>
+  window.onload = function() {
+    
+      hljs.initHighlighting();
+    
+    
+  };
+</script>
+
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,700,700i" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700" rel="stylesheet">
+
+
+
+</body>
+</html>
+
