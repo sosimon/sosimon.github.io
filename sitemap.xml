@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-2/</loc>
+    <lastmod>2017-12-22T17:38:32-08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-1/</loc>
     <lastmod>2017-05-25T09:43:48-07:00</lastmod>
   </url>
@@ -39,7 +44,7 @@
   
   <url>
     <loc>https://sosimon.github.io/blog/</loc>
-    <lastmod>2017-05-25T09:43:48-07:00</lastmod>
+    <lastmod>2017-12-22T17:38:32-08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -50,7 +55,7 @@
   
   <url>
     <loc>https://sosimon.github.io/</loc>
-    <lastmod>2017-05-25T09:43:48-07:00</lastmod>
+    <lastmod>2017-12-22T17:38:32-08:00</lastmod>
     <priority>0</priority>
   </url>
   

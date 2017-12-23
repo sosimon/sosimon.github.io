@@ -13,7 +13,7 @@
 
     <meta property="twitter:site" content="@sosimon">
 
-<meta property="twitter:title" content="Blog">
+<meta property="twitter:title" content="AWS Lambda and API Gateway Example (Part 2)">
 
     <meta property="twitter:card" content="summary">
 
@@ -22,10 +22,10 @@
 <title>
 
 
-     Simon So - Blog 
+     Simon So - AWS Lambda and API Gateway Example (Part 2) 
 
 </title>
-<link rel="canonical" href="https://sosimon.github.io/blog/">
+<link rel="canonical" href="https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-2/">
 
 
 <link rel="stylesheet" href="https://sosimon.github.io/css/main.v1.0.0.css">
@@ -47,8 +47,6 @@
 
 
 
-  <link href="https://sosimon.github.io/blog/index.xml" rel="alternate" type="application/rss+xml" title="Simon So" />
-
 
 </head>
 
@@ -56,7 +54,7 @@
 <body>
 
 
-<section class="header header-home">
+<section class="header">
 
     <div class="container">
         <div class="content">
@@ -82,75 +80,83 @@
     </div>
 </section>
 
-<section class="main">
+
+<section class="main post non-narrow zero-top-spacing">
     <div class="container">
         <div class="content">
-            <div class="posts">
-                <div class="page-heading">Blog</div>
-                <ul>
-                    
-                        <li class="groupby">Dec, 2017</li>
-                        
-                            <li class="post-item">
-    <span class="meta">Dec 22, 2017</span>
-    <a href="https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-2/"><span>AWS Lambda and API Gateway Example (Part 2)</span></a>
-</li>
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
 
-                        
-                    
-                        <li class="groupby">May, 2017</li>
-                        
-                            <li class="post-item">
-    <span class="meta">May 25, 2017</span>
-    <a href="https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-1/"><span>AWS Lambda and API Gateway Example (Part 1)</span></a>
-</li>
+    AWS Lambda and API Gateway Example (Part 2)
 
+</div>
+
+                </div>
+                <div class="meta">
+                    <div class="date" title="Fri Dec 22 2017 17:38:32 PST">Dec 22, 2017</div>
+                    
                         
                     
-                        <li class="groupby">Apr, 2017</li>
-                        
-                            <li class="post-item">
-    <span class="meta">Apr 21, 2017</span>
-    <a href="https://sosimon.github.io/blog/serverless-and-aws-lambda/"><span>Serverless and AWS Lambda</span></a>
-</li>
+                    <div class="reading-time"><div class="middot"></div>1 minute read</div>
+                    <div class="tags">
+                        <ul>
+                          
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="markdown">
+                
+    <p>In Part 2, we walkthrough the process of creating an API endpoint via API Gateway. Navigate to the API Gateway in the AWS Console and hit <code>Create API</code>. Name the API and continue.</p>
 
-                        
-                    
-                        <li class="groupby">Nov, 2016</li>
-                        
-                            <li class="post-item">
-    <span class="meta">Nov 5, 2016</span>
-    <a href="https://sosimon.github.io/blog/setting-up-your-own-private-vpn-on-google-cloud/"><span>Setting up your own private VPN on Google Cloud</span></a>
-</li>
+<p>On the Resources screen, create a <code>GET</code> method via <code>Create Method</code> under the <code>Actions</code> menu.</p>
 
-                        
-                    
-                        <li class="groupby">Oct, 2016</li>
-                        
-                            <li class="post-item">
-    <span class="meta">Oct 7, 2016</span>
-    <a href="https://sosimon.github.io/blog/first/"><span>First!</span></a>
-</li>
+<p>Choose <code>Use Lambda Proxy integration</code>, select the region that our Lambda function belongs in, enter the name of our Lambda function, and then hit Save.</p>
 
-                        
-                            <li class="post-item">
-    <span class="meta">Oct 8, 2016</span>
-    <a href="https://sosimon.github.io/blog/til-ternary-in-bash/"><span>TIL: ternary in bash</span></a>
-</li>
+<p><img src="https://user-images.githubusercontent.com/10470014/34316854-a33cfbf4-e754-11e7-84d6-2091ebf138a0.png" alt="create_method" /></p>
 
-                        
-                            <li class="post-item">
-    <span class="meta">Oct 10, 2016</span>
-    <a href="https://sosimon.github.io/blog/go-static-file-server/"><span>Go: static file server</span></a>
-</li>
+<p>Almost there! At this point, we can test out the endpoint via the test link on the left.</p>
 
-                        
-                    
-                </ul>
+<p><img src="https://user-images.githubusercontent.com/10470014/34316868-3ad58c74-e755-11e7-90ac-519729f1df7e.png" alt="test_endpoint" /></p>
+
+<p>The last step is to deploy the endpoint. We can do this by going to <code>Deploy API</code> under <code>Actions</code>. Create and name the stage (prod) and then hit <code>Deploy</code>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/10470014/34316872-8eb2b8d0-e755-11e7-8377-6b6dd1661b0d.png" alt="deploy_api" /></p>
+
+<p>Take note of the URL - our endpoint is now live!</p>
+
+
+                <br>
+            </div>
+            
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sosimon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
             </div>
         </div>
     </div>
 </section>
+
 <section class="footer">
     <div class="container">
         <div class="icons">

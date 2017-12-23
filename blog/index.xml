@@ -6,10 +6,21 @@
     <description>Recent content in Blog on Simon So</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 25 May 2017 09:43:48 -0700</lastBuildDate>
+    <lastBuildDate>Fri, 22 Dec 2017 17:38:32 -0800</lastBuildDate>
     
 	<atom:link href="https://sosimon.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS Lambda and API Gateway Example (Part 2)</title>
+      <link>https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-2/</link>
+      <pubDate>Fri, 22 Dec 2017 17:38:32 -0800</pubDate>
+      
+      <guid>https://sosimon.github.io/blog/aws-lambda-and-api-gateway-example-part-2/</guid>
+      <description>In Part 2, we walkthrough the process of creating an API endpoint via API Gateway. Navigate to the API Gateway in the AWS Console and hit Create API. Name the API and continue.
+On the Resources screen, create a GET method via Create Method under the Actions menu.
+Choose Use Lambda Proxy integration, select the region that our Lambda function belongs in, enter the name of our Lambda function, and then hit Save.</description>
+    </item>
     
     <item>
       <title>AWS Lambda and API Gateway Example (Part 1)</title>
