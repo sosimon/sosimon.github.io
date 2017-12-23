@@ -56,7 +56,7 @@ At work last week, there was a situation where an emergency firewall and router 
       
       <guid>https://sosimon.github.io/blog/til-ternary-in-bash/</guid>
       <description>I have been working with shell scripts for 4-5 years now, and I only recently saw, for the first time, someone shortcut the classic if/else/then statements:
-[ $condition == &amp;quot;true&amp;quot; ] &amp;amp;&amp;amp; echo &amp;quot;true&amp;quot; || echo &amp;quot;false&amp;quot;  It took me a few minutes of staring at it to make sure it works the way I think it works.
+[ $condition == &amp;#34;true&amp;#34; ] &amp;amp;&amp;amp; echo &amp;#34;true&amp;#34; || echo &amp;#34;false&amp;#34; It took me a few minutes of staring at it to make sure it works the way I think it works.
 Having seen this though, I am of the opinion that it&amp;rsquo;s probably better to be a bit more verbose:</description>
     </item>
     
@@ -66,7 +66,7 @@ Having seen this though, I am of the opinion that it&amp;rsquo;s probably better
       <pubDate>Fri, 07 Oct 2016 17:44:29 -0700</pubDate>
       
       <guid>https://sosimon.github.io/about/</guid>
-      <description>Simon writes words and they appear on a screen.</description>
+      <description>Simon said so.</description>
     </item>
     
     <item>

@@ -66,8 +66,6 @@
                     
                     
                         
-                    
-                        
                             
                         
                     
@@ -122,52 +120,48 @@
 <p>We&rsquo;ll be using Ubuntu 16.04 and OpenVPN as per <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-16-04">this</a> Digital Ocean tutorial, which has pretty much has everything we need. The only difference is we&rsquo;re running the steps on a Google Cloud compute, rather than a Digital Ocean droplet.</p>
 
 <p>Step 1: create the compute instance. We can do this via the UI or CLI:</p>
-<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span>gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts
-</pre></div>
-
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gcloud compute instances create vpn-server --can-ip-forward --machine-type g1-small --image ubuntu-1604-lts</code></pre></div>
 <p>Step 2: follow the Digital Ocean tutorial to install OpenVPN and create the private/public keys for server and client(s):</p>
-<div class="highlight" style="background: #f0f0f0"><pre style="line-height: 125%"><span></span><span style="color: #60a0b0; font-style: italic"># Install OpenVPN and EasyRSA</span>
-sudo apt-get install openvpn easy-rsa
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#60a0b0;font-style:italic"># Install OpenVPN and EasyRSA
+</span><span style="color:#60a0b0;font-style:italic"></span>sudo apt-get install openvpn easy-rsa
 sudo make-cadir /etc/openvpn/easy-rsa
 
-<span style="color: #60a0b0; font-style: italic"># Configure env vars for generating certs</span>
-sudo su
-<span style="color: #007020">cd</span> /etc/openvpn/easy-rsa
+<span style="color:#60a0b0;font-style:italic"># Configure env vars for generating certs
+</span><span style="color:#60a0b0;font-style:italic"></span>sudo su
+<span style="color:#007020">cd</span> /etc/openvpn/easy-rsa
 vi vars
-<span style="color: #007020">source</span> vars
+<span style="color:#007020">source</span> vars
 
-<span style="color: #60a0b0; font-style: italic"># Clean, create CA cert, server and dh keys</span>
-./clean-all
+<span style="color:#60a0b0;font-style:italic"># Clean, create CA cert, server and dh keys
+</span><span style="color:#60a0b0;font-style:italic"></span>./clean-all
 ./build-ca
 ./build-key-server server
 ./build-dh
 openvpn --genkey --secret keys/ta.key
 
-<span style="color: #60a0b0; font-style: italic"># Create client key pair</span>
-./build-key client1
-<span style="color: #007020">cd</span> keys
+<span style="color:#60a0b0;font-style:italic"># Create client key pair
+</span><span style="color:#60a0b0;font-style:italic"></span>./build-key client1
+<span style="color:#007020">cd</span> keys
 cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
 
-<span style="color: #60a0b0; font-style: italic"># Configure server.conf, sysctl.conf, and firewall/NAT rules</span>
-cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+<span style="color:#60a0b0;font-style:italic"># Configure server.conf, sysctl.conf, and firewall/NAT rules
+</span><span style="color:#60a0b0;font-style:italic"></span>cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
 gunzip /etc/openvpn/server.conf.gz
 vi /etc/opevpn/server.conf
 vi /etc/sysctl.conf
 vi /etc/ufw/before.rules
 vi /etc/default/ufw
-ufw allow <span style="color: #40a070">3141</span>/tcp
+ufw allow <span style="color:#40a070">3141</span>/tcp
 ufw allow OpenSSH
 
-<span style="color: #60a0b0; font-style: italic"># Restart ufw</span>
-ufw disable
-ufw <span style="color: #007020">enable</span>
+<span style="color:#60a0b0;font-style:italic"># Restart ufw
+</span><span style="color:#60a0b0;font-style:italic"></span>ufw disable
+ufw <span style="color:#007020">enable</span>
 
-<span style="color: #60a0b0; font-style: italic"># Start OpenVPN and enable daemon (auto-start on server reboot)</span>
-systemctl start openvpn@server
+<span style="color:#60a0b0;font-style:italic"># Start OpenVPN and enable daemon (auto-start on server reboot)
+</span><span style="color:#60a0b0;font-style:italic"></span>systemctl start openvpn@server
 systemctl status openvpn@server
-systemctl <span style="color: #007020">enable</span> openvpn@server
-</pre></div>
-
+systemctl <span style="color:#007020">enable</span> openvpn@server</code></pre></div>
 <p>Copy the client keys and CA cert (ca.crt, client1.crt, client1.key) to local machine and configure OpenVPN on the client.</p>
 
 <p>Step 3: PROFIT!</p>
@@ -179,20 +173,25 @@ systemctl <span style="color: #007020">enable</span> openvpn@server
             <br>
             <div class="disqus">
                 <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_shortname = 'sosimon';
-    var disqus_identifier = 'https:\/\/sosimon.github.io\/blog\/setting-up-your-own-private-vpn-on-google-cloud\/';
-    var disqus_title = 'Setting up your own private VPN on Google Cloud';
-    var disqus_url = 'https:\/\/sosimon.github.io\/blog\/setting-up-your-own-private-vpn-on-google-cloud\/';
-
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
     (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sosimon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
             </div>
         </div>
     </div>
